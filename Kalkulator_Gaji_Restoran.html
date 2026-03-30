@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Gaji - San Andreas Council</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 24px; }
+        input, select { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; margin-top: 4px; }
+        label { font-size: 13px; font-weight: 600; color: #475569; }
+        .result-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 8px; }
+        .highlight { color: #2563eb; font-weight: 700; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-slate-800">Sistem Penggajian Restoran</h1>
+            <p class="text-slate-500 uppercase tracking-widest text-xs mt-2">ExecutiveRP San Andreas Council of Business and Wealth</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- STEP 1: FINANCE GLOBAL -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 border-b pb-2">Tahap 1: Profit Perusahaan</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label>Total Revenue ($)</label>
+                        <input type="number" id="totalRevenue" value="1000000" oninput="calculate()">
+                    </div>
+                    <div>
+                        <label>Pengeluaran Operasional (Bahan Baku) ($)</label>
+                        <input type="number" id="opsExpense" value="200000" oninput="calculate()">
+                    </div>
+                    <div class="result-box">
+                        <p class="text-sm">Asuransi Perusahaan (3%): <span id="compInsurance" class="highlight">$0</span></p>
+                        <p class="text-sm">Pajak Perusahaan: <span id="compTax" class="highlight">$0</span></p>
+                        <p class="text-lg font-bold mt-2 text-green-600">Net Profit: <span id="netProfit">$0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: STAFF POOL -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 border-b pb-2">Tahap 2: Pembagian PUG</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label>Wage Percentage (Opsi Boss)</label>
+                        <select id="wagePercent" onchange="calculate()">
+                            <option value="0.4">40%</option>
+                            <option value="0.5">50%</option>
+                            <option value="0.6" selected>60%</option>
+                        </select>
+                    </div>
+                    <div class="result-box bg-blue-50 border-blue-100">
+                        <p class="text-sm font-bold">Pool Utama Gaji (PUG):</p>
+                        <p class="text-2xl font-black text-blue-700" id="pugAmount">$0</p>
+                        <div class="grid grid-cols-2 gap-2 mt-2 text-[11px] uppercase">
+                            <div>Pokok (15%): <span id="pugPokok">$0</span></div>
+                            <div>Waktu (15%): <span id="pugWaktu">$0</span></div>
+                            <div class="col-span-2">Hustle (70%): <span id="pugHustle">$0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: INDIVIDUAL CALCULATOR -->
+            <div class="card md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 border-b pb-2">Simulator Gaji Individu</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-600">Data Global Minggu Ini</h3>
+                        <div>
+                            <label>Total Staff Aktif</label>
+                            <input type="number" id="totalStaffCount" value="10" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label>Total Jam Kerja Semua Staff</label>
+                            <input type="number" id="totalHours" value="100" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label>Total Poin Semua Staff</label>
+                            <input type="number" id="totalPoints" value="1000" oninput="calculate()">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 border-l pl-6">
+                        <h3 class="font-bold text-slate-600">Data Staff Terpilih</h3>
+                        <div>
+                            <label>Jam Kerja Staff</label>
+                            <input type="number" id="staffHours" value="12" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label>Poin Staff (Receipt*3 + Serve*2 + Item*1)</label>
+                            <input type="number" id="staffPoints" value="150" oninput="calculate()">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 bg-slate-900 text-white p-6 rounded-xl">
+                        <h3 class="font-bold text-blue-400">Hasil Gaji Bersih</h3>
+                        <div class="text-sm space-y-1 opacity-80">
+                            <p>Gaji Kotor: <span id="resGross">$0</span></p>
+                            <p>Asuransi Kesehatan (3%): <span id="resHealth">$0</span></p>
+                            <p>Pajak Pendapatan: <span id="resTax">$0</span></p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-700">
+                            <p class="text-xs text-blue-300 uppercase">Take-Home Pay</p>
+                            <p class="text-3xl font-black text-green-400" id="resNet">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-center text-slate-400 text-xs italic">
+            Seluruh perhitungan mengikuti standar Marginal Tax & Company Pool San Andreas Council.
+        </footer>
+    </div>
+
+    <script>
+        function formatMoney(amount) {
+            return "$" + Math.round(amount).toLocaleString();
+        }
+
+        function calculate() {
+            // Inputs
+            const revenue = parseFloat(document.getElementById('totalRevenue').value) || 0;
+            const opsExpense = parseFloat(document.getElementById('opsExpense').value) || 0;
+            const wagePerc = parseFloat(document.getElementById('wagePercent').value) || 0;
+            
+            const totalStaff = parseFloat(document.getElementById('totalStaffCount').value) || 1;
+            const totalHours = parseFloat(document.getElementById('totalHours').value) || 1;
+            const totalPoints = parseFloat(document.getElementById('totalPoints').value) || 1;
+
+            const staffHours = parseFloat(document.getElementById('staffHours').value) || 0;
+            const staffPoints = parseFloat(document.getElementById('staffPoints').value) || 0;
+
+            // 1. Company Insurance (3%)
+            const compIns = revenue * 0.03;
+            document.getElementById('compInsurance').innerText = formatMoney(compIns);
+
+            // 2. Company Marginal Tax
+            let compTax = 0;
+            if (revenue <= 500000) compTax = revenue * 0.15;
+            else if (revenue <= 1000000) compTax = (500000 * 0.15) + (revenue - 500000) * 0.12;
+            else if (revenue <= 2000000) compTax = (500000 * 0.15) + (500000 * 0.12) + (revenue - 1000000) * 0.10;
+            else compTax = (500000 * 0.15) + (500000 * 0.12) + (1000000 * 0.10) + (revenue - 2000000) * 0.07;
+            document.getElementById('compTax').innerText = formatMoney(compTax);
+
+            // 3. Net Profit
+            const netProfit = revenue - (opsExpense + compIns + compTax);
+            document.getElementById('netProfit').innerText = formatMoney(netProfit);
+
+            // 4. PUG Calculation
+            const pug = netProfit * wagePerc;
+            document.getElementById('pugAmount').innerText = formatMoney(pug);
+            
+            const pPokok = pug * 0.15;
+            const pWaktu = pug * 0.15;
+            const pHustle = pug * 0.70;
+            document.getElementById('pugPokok').innerText = formatMoney(pPokok);
+            document.getElementById('pugWaktu').innerText = formatMoney(pWaktu);
+            document.getElementById('pugHustle').innerText = formatMoney(pHustle);
+
+            // 5. Staff Individual Salary
+            const gPokokStaff = pPokok / totalStaff;
+            const gWaktuStaff = pWaktu * (staffHours / totalHours);
+            const gHustleStaff = pHustle * (staffPoints / totalPoints);
+            const grossSalary = gPokokStaff + gWaktuStaff + gHustleStaff;
+            document.getElementById('resGross').innerText = formatMoney(grossSalary);
+
+            // 6. Deductions
+            const healthIns = grossSalary * 0.03;
+            document.getElementById('resHealth').innerText = formatMoney(healthIns);
+
+            // Staff Marginal Tax
+            let staffTax = 0;
+            const g = grossSalary;
+            if (g <= 15000) staffTax = g * 0.07;
+            else if (g <= 25000) staffTax = 1050 + (g - 15000) * 0.10;
+            else if (g <= 50000) staffTax = 2050 + (g - 25000) * 0.12;
+            else staffTax = 5050 + (g - 50000) * 0.15;
+            document.getElementById('resTax').innerText = formatMoney(staffTax);
+
+            // 7. Final Net
+            const netSalary = grossSalary - healthIns - staffTax;
+            document.getElementById('resNet').innerText = formatMoney(netSalary);
+        }
+
+        window.onload = calculate;
+    </script>
+</body>
+</html>
